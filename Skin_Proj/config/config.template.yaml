@@ -1,0 +1,156 @@
+data:
+  source_img_root: "SET_PC_LOCAL_IMAGE_ROOT"
+  source_label_root: "SET_PC_LOCAL_LABEL_ROOT"
+  external_env_path: "SET_PC_LOCAL_ENV_FILE"
+  scenarios:
+    - "01"
+    - "02"
+    - "03"
+
+project:
+  manifest_name: "forehead_manifest.json"
+  split_name: "person_split.json"
+  train_jsonl_name: "train_forehead.jsonl"
+  val_jsonl_name: "val_forehead.jsonl"
+  test_jsonl_name: "test_forehead.jsonl"
+  validation_log_name: "validation_report.json"
+
+runtime:
+  default_profile: "primary_4b"
+
+model_profiles:
+  primary_4b:
+    role: "default_lora_smoke_and_training_connection"
+    model_name: "Qwen/Qwen3-VL-4B-Instruct"
+    processor_name: "Qwen/Qwen3-VL-4B-Instruct"
+    lora_output_dir: "qwen3_vl_forehead"
+    precision: "float16"
+    device_map: "single_gpu"
+    device: "cuda"
+    max_image_size: 1024
+    trust_remote_code: false
+    local_files_only: true
+    low_cpu_mem_usage: true
+    generation_max_new_tokens: 64
+    allow_lora_training: true
+    allow_inference_only: true
+    lora_r: 8
+    lora_alpha: 16
+    lora_dropout: 0.05
+    target_modules: "all-linear"
+
+  quantized_4b:
+    role: "memory_reduced_4bit_lora_fallback"
+    model_name: "Qwen/Qwen3-VL-4B-Instruct"
+    processor_name: "Qwen/Qwen3-VL-4B-Instruct"
+    lora_output_dir: "qwen3_vl_4b_4bit"
+    precision: "float16"
+    device_map: "single_gpu"
+    device: "cuda"
+    max_image_size: 768
+    trust_remote_code: false
+    local_files_only: true
+    low_cpu_mem_usage: true
+    generation_max_new_tokens: 48
+    allow_lora_training: true
+    allow_inference_only: true
+    quantization: "4bit"
+    lora_r: 8
+    lora_alpha: 16
+    lora_dropout: 0.05
+    target_modules: "all-linear"
+
+  smoke_safe_2b:
+    role: "safe_fallback_smoke_test"
+    model_name: "Qwen/Qwen3-VL-2B-Instruct"
+    processor_name: "Qwen/Qwen3-VL-2B-Instruct"
+    lora_output_dir: "qwen3_vl_smoke_test"
+    precision: "float16"
+    device_map: "single_gpu"
+    device: "cuda"
+    max_image_size: 768
+    trust_remote_code: false
+    local_files_only: true
+    low_cpu_mem_usage: true
+    generation_max_new_tokens: 32
+    allow_lora_training: true
+    allow_inference_only: true
+    lora_r: 8
+    lora_alpha: 16
+    lora_dropout: 0.05
+    target_modules: "all-linear"
+
+  deferred_8b:
+    role: "deferred_inference_only_or_cloud_candidate"
+    model_name: "Qwen/Qwen3-VL-8B-Instruct"
+    processor_name: "Qwen/Qwen3-VL-8B-Instruct"
+    lora_output_dir: "qwen3_vl_deferred_8b"
+    precision: "float16"
+    device_map: "single_gpu"
+    device: "cuda"
+    max_image_size: 768
+    trust_remote_code: false
+    local_files_only: true
+    low_cpu_mem_usage: true
+    generation_max_new_tokens: 64
+    allow_lora_training: false
+    allow_inference_only: true
+    lora_r: 8
+    lora_alpha: 16
+    lora_dropout: 0.05
+    target_modules: "all-linear"
+
+task:
+  target_keys:
+    - "forehead_wrinkle"
+    - "forehead_pigmentation"
+  label_remap:
+    forehead_wrinkle:
+      0: 0
+      1: 1
+      2: 2
+      3: 3
+      4: 4
+      5: 4
+      6: 4
+    forehead_pigmentation:
+      0: 0
+      1: 1
+      2: 2
+      3: 3
+      4: 4
+      5: 4
+  output_schema:
+    forehead_wrinkle: 0
+    forehead_pigmentation: 0
+  label_ranges:
+    forehead_wrinkle:
+      min: 0
+      max: 4
+    forehead_pigmentation:
+      min: 0
+      max: 4
+
+training:
+  batch_size: 1
+  epochs: 1
+  max_steps: 12
+  learning_rate: 0.0002
+  gradient_accumulation_steps: 1
+  num_workers: 0
+  timeout_seconds: 1800
+
+evaluation:
+  phase05_samples_per_scenario: 30
+  phase05_fallback_samples_per_scenario: 10
+  estimated_avg_inference_sec_primary_4b: 3.0
+
+execution_policy:
+  timeout_multiplier: 1.5
+  min_timeout_seconds: 1800
+  primary_4b_default_timeout_seconds: 3600
+
+logging:
+  smoke_test_json: "outputs/smoke_tests/smoke_test_log.json"
+  eval_summary_json: "outputs/eval/phase03_eval_summary.json"
+  eval_summary_md: "outputs/eval/phase03_eval_summary.md"

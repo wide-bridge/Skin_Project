@@ -1,0 +1,11 @@
+이 얼굴 이미지를 보고 아래 5개 피부 분석 등급을 JSON으로만 출력하라.
+다른 설명은 하지 말라.
+
+사용할 키:
+- forehead_wrinkle
+- forehead_pigmentation
+- glabellus_wrinkle
+- l_cheek_pigmentation
+- r_cheek_pigmentation
+
+각 값은 0부터 4까지의 정수 등급만 사용하라.

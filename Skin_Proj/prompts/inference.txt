@@ -1,0 +1,4 @@
+얼굴 이미지를 보고 이마 주름 등급과 이마 색소침착 등급을 판단하여 JSON만 출력하라.
+다른 설명은 하지 말라.
+키는 forehead_wrinkle, forehead_pigmentation만 사용하라.
+값은 정수 등급만 넣어라.

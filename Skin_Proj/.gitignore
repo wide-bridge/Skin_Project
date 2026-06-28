@@ -1,0 +1,78 @@
+# Environment
+.env
+*.env
+*.key
+config.local.yaml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Outputs and generated artifacts
+outputs/**
+!outputs/.gitkeep
+!outputs/validation/
+!outputs/validation/.gitkeep
+!outputs/smoke_tests/
+!outputs/smoke_tests/.gitkeep
+lora/**
+!lora/README.md
+models/**
+checkpoints/**
+runs/**
+wandb/**
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Dataset artifacts / large generated data
+dataset/jsonl/**
+dataset/manifests/**
+dataset/splits/**
+dataset/logs/**
+dataset/cache/**
+dataset/tmp/**
+dataset/raw/**
+dataset/images/**
+dataset/labels/**
+*.jsonl
+
+# Hugging Face cache
+.cache/
+hf_cache/
+huggingface_cache/
+.hf_cache/
+
+# Reference documents
+doc/SkinTalk/
+doc/local_only/
+doc/reference/
+*.hwp
+*.docx
+*.pdf
+*.JPG
+*.jpg
+*.png
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
