@@ -1,15 +1,16 @@
-# 00_작업지시서_(GitHub_연결_및_형상관리_기반구축)
+﻿# 00_작업지시서_(GitHub_연결_및_형상관리_기반구축)
 
 ## 1. 목적
 
-`Skin_diagnosis_proj`는 피부질환 진단 VLM 프로젝트를 중심으로 시작하되, 이후 RAG, 비전 분기, HITL, React/FastAPI 서비스까지 확장할 수 있는 장기 작업 저장소로 운영한다.
+`Skin_diagnosis_proj`를 피부질환 진단 VLM 프로젝트의 독립 작업 공간으로 시작하고, 이후 문서, 코드, 데이터 산출물, 설정 파일을 GitHub 기준으로 안정적으로 관리할 수 있는 최소 기반을 마련한다.
 
 이번 00 단계의 목적은 아래와 같다.
 
-- GitHub 기반 공동 작업 구조 확립
-- 프로젝트 산출물과 민감 데이터의 분리
-- PM 문서, 개발 상태 문서, 작업 로그의 추적 가능 상태 확보
-- 이후 `01~` 단계 작업지시서를 안정적으로 누적 수정할 수 있는 기반 마련
+- 프로젝트 문서 시작점 생성
+- 개발 상태 문서 생성
+- GitHub 반영 가능한 초기 구조 확보
+- 비밀키, 원본 데이터, 대용량 산출물의 분리 원칙 명시
+- 이후 `01~` 단계 작업지시서를 누적 수정할 수 있는 기준점 확보
 
 프로젝트 루트:
 
@@ -17,20 +18,14 @@
 D:\vibe_coding\codex\Skin_Project\Skin_diagnosis_proj
 ```
 
-## 2. 운영 원칙
+## 2. 현재 저장소 기준 운영 원칙
 
 ### 2.1 GitHub에 포함하는 것
 
-- 소스코드
-- 공용 설정 템플릿
-- 작업지시서
-- 기술 설계 문서
-- 개발 상태 문서
-- README
-- `.gitignore`
-- API 스펙 문서
-- 프롬프트 템플릿
-- 예시용 소규모 샘플 설정
+- `Skin_diagnosis_proj/doc/pm` 작업지시서
+- `Skin_diagnosis_proj/docs/dev` 상태 문서
+- 이후 추가될 소스코드와 공용 설정 템플릿
+- 기술 스펙 문서와 API 문서
 
 ### 2.2 GitHub에 포함하지 않는 것
 
@@ -38,95 +33,128 @@ D:\vibe_coding\codex\Skin_Project\Skin_diagnosis_proj
 - 원본 라벨 데이터
 - 외부 참고 데이터셋 복사본
 - 생성된 manifest, split, jsonl 대용량 결과물
-- 벡터 인덱스 실데이터
 - 체크포인트, adapter weight, cache
 - `.env`, `.env.local`, `config.local.yaml`
-- 개인 검토용 문서, 비공개 회의자료, 민감 의료 문서
+- 외부 비공개 참고 문서 원문
 
-### 2.3 문서 구분
+### 2.3 외부 환경키 위치
 
-- `doc/pm`: 공식 작업지시서와 범위 정의
-- `doc/spec`: 모델, 데이터, API, 오케스트레이션 상세 스펙
-- `doc/local_only`: 외부 반출 금지 참고 문서
-- `docs/dev`: 현재 상태, 다음 작업, 이슈, 스모크 테스트 요약
+로컬 비밀값은 저장소 밖에서 관리한다.
 
-## 3. 권장 디렉터리 구조
+- 환경키 위치: `D:\PyProject\env_keys\.env`
+- 확인된 주요 변수명:
+  - `HF_TOKEN`
+  - `OPENROUTER_API_KEY`
+  - `OPENAI_API_KEY`
 
-```text
-doc/
-  pm/
-  spec/
-  local_only/
+주의:
 
-docs/
-  dev/
+- 위 파일은 Git 추적 대상이 아니다.
+- 문서와 코드에는 비밀값을 직접 기록하지 않는다.
 
-apps/
-  api/
-  web/
+## 3. 현재 실제 구조
 
-services/
-  router/
-  vlm/
-  vision/
-  rag/
-  hitl/
-
-data/
-  manifests/
-  splits/
-  processed/
-  eval/
-
-prompts/
-
-scripts/
-
-outputs/
-```
-
-## 4. 브랜치 정책
-
-기본 브랜치:
+현재 `Skin_diagnosis_proj` 기준 실제 생성된 구조는 아래와 같다.
 
 ```text
-main
-dev
+Skin_diagnosis_proj/
+  doc/
+    pm/
+      00_작업지시서_(GitHub_연결_및_형상관리_기반구축).md
+      01_작업지시서_(프로젝트정의_및_범위확정).md
+      02_작업지시서_(시스템아키텍처_및_서비스기반구축).md
+      03_작업지시서_(데이터정의_및_VLM학습기반정리).md
+      04_작업지시서_(RAG_비전_HITL_확장구조정의).md
+      05_작업지시서_(React_FastAPI_UI_API_구현범위정의).md
+  docs/
+    dev/
+      current_status.md
+      known_issues.md
+      next_actions.md
+      smoke_test_summary.md
 ```
+
+아래 구조는 향후 단계에서 확장한다.
+
+- `doc/spec`
+- `doc/local_only`
+- `apps/`
+- `services/`
+- `data/`
+- `outputs/`
+
+## 4. 브랜치 및 원격 상태
+
+현재 확인된 상태:
+
+- 현재 브랜치: `main`
+- 원격 저장소: `origin -> https://github.com/wide-bridge/Skin_Project.git`
+- 최신 반영 커밋: `91a3bfb Add initial Skin_diagnosis_proj planning docs`
 
 운영 원칙:
 
-- `main`은 안정 상태만 반영
-- 기본 작업은 `dev` 또는 feature branch에서 수행
-- 대규모 문서 개편도 `dev` 기준으로 진행
-- 작업지시서 수정 이력은 커밋 메시지로 남김
+- 현재는 `main`에 초기 문서 반영 완료
+- 이후 실제 구현 단계부터는 `dev` 또는 feature branch 운영을 권장
 
 ## 5. .gitignore 기준
 
-반드시 제외할 항목:
+루트 저장소의 `.gitignore`에서 현재 아래 범주가 이미 제외되고 있다.
 
-- 데이터 원본 경로 연결 산출물
-- 대용량 학습 결과물
-- 로컬 캐시
-- 비밀키 및 로컬 설정
-- 벡터 DB 실파일
-- 업로드 이미지 및 사용자 로그 원본
+- `.env`, `.env.*`
+- `config.local.yaml`, `*.local.yaml`
+- `outputs`, `checkpoints`, `runs`
+- 모델 weight 계열 파일
+- dataset 산출물 폴더
+- `logs`, `.cache`, `cache`
+
+현재 확인 사항:
+
+- `Skin_diagnosis_proj` 자체에서 별도 산출물은 아직 생성되지 않음
+- 루트 `.gitignore` 수정 사항이 다른 작업과 함께 존재하므로 이번 00 단계 완료 처리에는 포함하지 않음
 
 ## 6. 상태 문서
 
-초기부터 아래 문서를 유지한다.
+현재 생성 완료된 상태 문서:
 
 - `docs/dev/current_status.md`
 - `docs/dev/next_actions.md`
 - `docs/dev/known_issues.md`
 - `docs/dev/smoke_test_summary.md`
 
-## 7. 완료 기준
+역할:
 
-아래를 만족하면 00 단계 완료로 본다.
+- `current_status.md`: 현재 진행 상태
+- `next_actions.md`: 바로 이어질 작업
+- `known_issues.md`: 현재 확인된 리스크
+- `smoke_test_summary.md`: 코드 스모크 테스트가 시작되면 누적 기록
+
+## 7. 00 단계 수행 결과
+
+이번 00 단계에서 실제로 완료된 작업:
+
+- `Skin_diagnosis_proj` 문서 루트 생성
+- `00~05` 작업지시서 초안 생성
+- `docs/dev` 상태 문서 생성
+- Git 커밋 생성
+- GitHub `main` 브랜치 push 완료
+- 외부 환경키 위치 확인
+
+이번 단계에서 의도적으로 아직 하지 않은 작업:
+
+- `apps`, `services`, `data`, `outputs` 실제 폴더 생성
+- 세부 `.gitignore` 프로젝트별 보강
+- 코드 스모크 테스트
+- 구현용 설정 템플릿 생성
+
+위 항목은 01 이후 단계 범위로 넘긴다.
+
+## 8. 완료 기준
+
+아래를 만족하므로 00 단계는 완료로 처리한다.
 
 - 저장소 내 문서 구조 생성 완료
 - `doc/pm` 작업지시서 시작점 생성 완료
 - `docs/dev` 상태 문서 생성 완료
-- Git 추적 제외 범위 합의 완료
-- 이후 01 단계부터 작업을 누적할 수 있는 구조 확인 완료
+- GitHub 커밋 및 push 완료
+- 외부 환경키 위치 및 비밀값 분리 원칙 확인 완료
+- 이후 01 단계부터 작업을 누적할 수 있는 기준점 확보 완료
