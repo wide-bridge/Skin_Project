@@ -10,7 +10,7 @@
 - 개발 상태 문서 생성
 - GitHub 반영 가능한 초기 구조 확보
 - 비밀키, 원본 데이터, 대용량 산출물의 분리 원칙 명시
-- 이후 `01~` 단계 작업지시서를 누적 수정할 수 있는 기준점 확보
+- 이후 `01~08` 단계 작업지시서를 누적 수정할 수 있는 기준점 확보
 
 프로젝트 루트:
 
@@ -64,8 +64,11 @@ Skin_diagnosis_proj/
       01_작업지시서_(프로젝트정의_및_범위확정).md
       02_작업지시서_(시스템아키텍처_및_서비스기반구축).md
       03_작업지시서_(데이터정의_및_VLM학습기반정리).md
-      04_작업지시서_(RAG_비전_HITL_확장구조정의).md
-      05_작업지시서_(React_FastAPI_UI_API_구현범위정의).md
+      04_작업지시서_(Qwen3-VL_LoRA_어댑터_기반구축).md
+      05_작업지시서_(RAG_데이터정제_및_검색기반구축).md
+      06_작업지시서_(최소챗봇_구현_및_VLM_RAG_연결준비).md
+      07_작업지시서_(RAG_비전_HITL_확장구조정의).md
+      08_작업지시서_(React_FastAPI_UI_API_구현범위정의).md
   docs/
     dev/
       current_status.md
@@ -74,26 +77,17 @@ Skin_diagnosis_proj/
       smoke_test_summary.md
 ```
 
-아래 구조는 향후 단계에서 확장한다.
-
-- `doc/spec`
-- `doc/local_only`
-- `apps/`
-- `services/`
-- `data/`
-- `outputs/`
-
 ## 4. 브랜치 및 원격 상태
 
 현재 확인된 상태:
 
 - 현재 브랜치: `main`
 - 원격 저장소: `origin -> https://github.com/wide-bridge/Skin_Project.git`
-- 최신 반영 커밋: `91a3bfb Add initial Skin_diagnosis_proj planning docs`
+- 최신 반영 커밋은 Git 기록 기준으로 갱신 관리
 
 운영 원칙:
 
-- 현재는 `main`에 초기 문서 반영 완료
+- 현재는 `main`에 문서 반영 중
 - 이후 실제 구현 단계부터는 `dev` 또는 feature branch 운영을 권장
 
 ## 5. .gitignore 기준
@@ -109,8 +103,8 @@ Skin_diagnosis_proj/
 
 현재 확인 사항:
 
-- `Skin_diagnosis_proj` 자체에서 별도 산출물은 아직 생성되지 않음
-- 루트 `.gitignore` 수정 사항이 다른 작업과 함께 존재하므로 이번 00 단계 완료 처리에는 포함하지 않음
+- `Skin_diagnosis_proj` 자체에서 별도 산출물은 아직 제한적임
+- 프로젝트 진행에 따라 `outputs`, `data/processed` 등 산출물이 늘어나므로 ignore 정책은 후속 보강 가능
 
 ## 6. 상태 문서
 
@@ -121,32 +115,15 @@ Skin_diagnosis_proj/
 - `docs/dev/known_issues.md`
 - `docs/dev/smoke_test_summary.md`
 
-역할:
-
-- `current_status.md`: 현재 진행 상태
-- `next_actions.md`: 바로 이어질 작업
-- `known_issues.md`: 현재 확인된 리스크
-- `smoke_test_summary.md`: 코드 스모크 테스트가 시작되면 누적 기록
-
 ## 7. 00 단계 수행 결과
 
 이번 00 단계에서 실제로 완료된 작업:
 
 - `Skin_diagnosis_proj` 문서 루트 생성
-- `00~05` 작업지시서 초안 생성
+- `00~08` 작업지시서 운영이 가능한 기반 생성
 - `docs/dev` 상태 문서 생성
-- Git 커밋 생성
-- GitHub `main` 브랜치 push 완료
+- Git 커밋 및 GitHub push 기반 확보
 - 외부 환경키 위치 확인
-
-이번 단계에서 의도적으로 아직 하지 않은 작업:
-
-- `apps`, `services`, `data`, `outputs` 실제 폴더 생성
-- 세부 `.gitignore` 프로젝트별 보강
-- 코드 스모크 테스트
-- 구현용 설정 템플릿 생성
-
-위 항목은 01 이후 단계 범위로 넘긴다.
 
 ## 8. 완료 기준
 
@@ -155,6 +132,6 @@ Skin_diagnosis_proj/
 - 저장소 내 문서 구조 생성 완료
 - `doc/pm` 작업지시서 시작점 생성 완료
 - `docs/dev` 상태 문서 생성 완료
-- GitHub 커밋 및 push 완료
+- GitHub 커밋 및 push 가능 상태 확인 완료
 - 외부 환경키 위치 및 비밀값 분리 원칙 확인 완료
 - 이후 01 단계부터 작업을 누적할 수 있는 기준점 확보 완료
