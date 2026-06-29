@@ -1,0 +1,22 @@
+# Local secrets and config
+.env
+.env.*
+config.local.yaml
+*.local.yaml
+
+# Raw and large data
+data/raw/
+data/interim/
+data/external/
+outputs/
+checkpoints/
+runs/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Python cache
+__pycache__/
+*.py[cod]
+doc/not_push/

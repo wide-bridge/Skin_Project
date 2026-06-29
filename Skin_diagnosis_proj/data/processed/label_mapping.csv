@@ -1,0 +1,11 @@
+﻿source_label,canonical_label,mapping_type,notes
+건선,psoriasis,exact,image label
+아토피,atopic_dermatitis,normalized,short label
+아토피 피부염,atopic_dermatitis,exact,normalized disease name
+여드름,acne,exact,image label
+정상,normal,exact,image label
+주사,rosacea,exact,image label
+지루,seborrheic_dermatitis,normalized,short label
+지루성 피부염,seborrheic_dermatitis,exact,normalized disease name
+안면홍조,facial_flushing,related_concept,do not merge into rosacea
+안면 홍조증,facial_flushing,related_concept,spacing variant

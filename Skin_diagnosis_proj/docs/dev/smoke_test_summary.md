@@ -1,4 +1,25 @@
-# Smoke Test Summary
+﻿# Smoke Test Summary
 
-- 초기 문서 단계로 아직 코드 스모크 테스트는 수행하지 않음
-
+- 실행 일시: 2026-06-29
+- 데이터 생성 스크립트 5종 실행 성공
+  - `python scripts/build_image_manifest.py`
+  - `python scripts/build_disease_ontology.py`
+  - `python scripts/build_label_mapping.py`
+  - `python scripts/build_vlm_train_dataset.py`
+  - `python scripts/build_rag_corpus_derma.py`
+- 생성 확인 파일
+  - `data/processed/image_manifest.csv`
+  - `data/processed/disease_ontology.csv`
+  - `data/processed/label_mapping.csv`
+  - `data/processed/vlm_train_dataset.jsonl`
+  - `data/processed/rag_corpus_derma.jsonl`
+- API 실행 확인
+  - `uvicorn apps.api.main:app --reload --port 8000`
+  - `GET /health` -> `200`, body `{\"status\":\"ok\"}`
+  - `POST /diagnosis/infer` -> `200`, placeholder JSON 반환 확인
+- placeholder 응답 예시
+  - `predicted_disease: acne`
+  - `confidence: 0.81`
+  - `needs_human_review: true`
+- Git 제외 규칙 확인
+  - `.env`, `config.local.yaml`, `checkpoints/`, `data/raw/` ignore 적용 확인

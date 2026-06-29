@@ -1,0 +1,2 @@
+﻿image_id,image_path,split,canonical_label,source_label,view,source,exists
+sample-acne-001,D:\vibe_coding\codex\Skin_Project\Skin_diagnosis_proj\data\processed\samples\sample_face_placeholder.png,train,acne,여드름,frontal,placeholder,True

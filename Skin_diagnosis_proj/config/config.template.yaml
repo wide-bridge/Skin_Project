@@ -1,0 +1,15 @@
+app:
+  name: skin-diagnosis-proj
+  env: local
+
+vlm:
+  model_id: Qwen/Qwen2.5-VL-3B-Instruct
+  adapter_path: null
+  device: cuda
+  torch_dtype: float16
+  max_new_tokens: 256
+  do_sample: false
+
+prompts:
+  diagnosis_system: prompts/diagnosis_system.txt
+

@@ -1,0 +1,8 @@
+﻿canonical_label,display_name_ko,display_name_en,category,is_active,notes
+psoriasis,건선,Psoriasis,skin_disease,True,image_class
+atopic_dermatitis,아토피 피부염,Atopic Dermatitis,skin_disease,True,image_class
+acne,여드름,Acne,skin_disease,True,image_class
+normal,정상,Normal,normal,True,image_class
+rosacea,주사,Rosacea,skin_disease,True,"image_class, text knowledge gap"
+seborrheic_dermatitis,지루성 피부염,Seborrheic Dermatitis,skin_disease,True,image_class
+facial_flushing,안면홍조,Facial Flushing,related_concept,True,related concept only; do not merge with rosacea
