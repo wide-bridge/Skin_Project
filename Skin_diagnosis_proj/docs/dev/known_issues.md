@@ -1,7 +1,7 @@
 ﻿# Known Issues
 
-- 이미지 데이터 질환 라벨과 Q&A 질환 ontology 사이에 불일치 가능성이 남아 있습니다.
-- `주사` 클래스는 이미지 라벨에 존재하지만 텍스트 지식이 부족해 후속 보강이 필요합니다.
-- 현재 `/diagnosis/infer`는 placeholder 응답만 반환하며 실제 모델 추론은 아직 연결되지 않았습니다.
-- `vlm_train_dataset.jsonl`과 `rag_corpus_derma.jsonl`은 현재 포맷 고정용 샘플 데이터이며 실제 학습/검색 데이터로 확장해야 합니다.
-- 일부 초기 구현 파일이 잘못된 경로에 생성된 이력이 있어 실제 프로젝트 경로 기준으로 계속 정리해야 합니다.
+- `Validation` 데이터를 다시 `val/test`로 나누는 임시 split 정책을 사용 중이다. 별도 독립 test set이 없으므로 향후 분리 전략을 재검토해야 한다.
+- `transformers` 업그레이드 과정에서 `streamlit` 관련 dependency warning(`packaging`, `rich`, `tenacity`)이 발생했다. 현재 04 실행에는 직접 영향이 없지만 환경 정리는 필요하다.
+- Windows 환경에서 Hugging Face cache symlink warning이 발생할 수 있다. 현재는 치명적 이슈는 아니며 성능/용량 측면 참고 사항이다.
+- 한글 경로/라벨을 터미널에서 출력할 때 인코딩이 깨져 보일 수 있다. 파일 내용 자체는 UTF-8로 저장하고 있다.
+- `baseline_resnet18_state.pt`와 `qwen_lora_adapter_preview/`는 로컬 산출물이며 Git에 포함하지 않는다.

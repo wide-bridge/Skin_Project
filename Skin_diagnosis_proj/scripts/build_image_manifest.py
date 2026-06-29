@@ -1,39 +1,67 @@
 ﻿from __future__ import annotations
 
-import sys
+import json
 from pathlib import Path
 
-CURRENT_DIR = Path(__file__).resolve().parent
-if str(CURRENT_DIR) not in sys.path:
-    sys.path.insert(0, str(CURRENT_DIR))
+from _common import CLASS_MAP, VIEW_MAP, dataset_root, deterministic_bucket, image_png_path, parse_folder_name, processed_dir, test_per_class_view, write_csv
 
-from _common import PROCESSED_DIR, SAMPLES_DIR, write_csv, write_minimal_png
+
+FIELDNAMES = [
+    "image_id",
+    "image_path",
+    "label_path",
+    "original_split",
+    "model_split",
+    "canonical_label",
+    "source_label",
+    "view",
+    "source",
+    "exists",
+]
+
+
+def build_rows() -> list[dict]:
+    rows: list[dict] = []
+    root = dataset_root()
+    for split_name, split_dir, folder_prefix in [("train", root / "Training" / "label_data", "TL"), ("val", root / "Validation" / "label_data", "VL")]:
+        for label_folder_dir in sorted(split_dir.iterdir()):
+            if not label_folder_dir.is_dir():
+                continue
+            _, label_ko, view_ko = parse_folder_name(label_folder_dir.name)
+            canonical_label = CLASS_MAP[label_ko]
+            view = VIEW_MAP[view_ko]
+            items = sorted(label_folder_dir.glob("*.json"))
+            if split_name == "val":
+                ordered = sorted(items, key=lambda p: deterministic_bucket(p.stem))
+                test_names = {p.stem for p in ordered[:test_per_class_view()]}
+            else:
+                test_names = set()
+            for label_path in items:
+                stem = label_path.stem
+                image_path = image_png_path(split_name, f"{label_ko}_{view_ko}", stem)
+                model_split = "test" if stem in test_names else split_name
+                rows.append({
+                    "image_id": stem,
+                    "image_path": str(image_path),
+                    "label_path": str(label_path),
+                    "original_split": split_name,
+                    "model_split": model_split,
+                    "canonical_label": canonical_label,
+                    "source_label": label_ko,
+                    "view": view,
+                    "source": "derma_ai",
+                    "exists": image_path.exists() and label_path.exists(),
+                })
+    return rows
 
 
 def main() -> None:
-    sample_image = SAMPLES_DIR / "sample_face_placeholder.png"
-    if not sample_image.exists():
-        write_minimal_png(sample_image)
-
-    rows = [
-        {
-            "image_id": "sample-acne-001",
-            "image_path": str(sample_image),
-            "split": "train",
-            "canonical_label": "acne",
-            "source_label": "여드름",
-            "view": "frontal",
-            "source": "placeholder",
-            "exists": True,
-        }
-    ]
-    write_csv(
-        PROCESSED_DIR / "image_manifest.csv",
-        ["image_id", "image_path", "split", "canonical_label", "source_label", "view", "source", "exists"],
-        rows,
-    )
-    print(f"wrote {PROCESSED_DIR / 'image_manifest.csv'}")
+    out = processed_dir() / "image_manifest.csv"
+    rows = build_rows()
+    write_csv(out, FIELDNAMES, rows)
+    print(f"wrote {out} with {len(rows)} rows")
 
 
 if __name__ == "__main__":
     main()
+

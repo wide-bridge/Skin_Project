@@ -1,14 +1,31 @@
-app:
+﻿app:
   name: skin-diagnosis-proj
   env: local
 
+datasets:
+  derma_ai_root: D:/vibe_coding/codex/DocTalk/Derma_AI/face_derma_data/face_derma_data
+  processed_dir: data/processed
+  test_per_class_view: 20
+
 vlm:
-  model_id: Qwen/Qwen2.5-VL-3B-Instruct
+  model_id: Qwen/Qwen3-VL-4B-Instruct
   adapter_path: null
   device: cuda
   torch_dtype: float16
   max_new_tokens: 256
   do_sample: false
+  train_max_samples: 2
+  train_max_steps: 1
+
+baseline:
+  backbone: resnet18
+  image_size: 384
+  batch_size: 8
+  epochs: 1
+  learning_rate: 0.0003
+  num_workers: 0
+  train_max_samples: 96
+  val_max_samples: 24
 
 prompts:
   diagnosis_system: prompts/diagnosis_system.txt

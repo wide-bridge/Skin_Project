@@ -1,89 +1,52 @@
-﻿# 04_작업지시서_(Qwen3-VL_LoRA_어댑터_기반구축)
+﻿# 04 작업지시서 (Qwen3-VL LoRA 어댑터 구현)
 
-## 1. 목적
+## 목적
+피부질환 진단 프로젝트의 1차 핵심 구현으로서, 웹보다 먼저 모델 학습/추론 경로를 실제로 검증한다. 본 단계에서는 baseline 비전 모델과 Qwen3-VL + LoRA 경로를 모두 준비하고, 샘플 추론까지 확인한다.
 
-1차 구현 착수 단계에서 `Qwen 계열 VLM + LoRA adapter`를 바로 연결할 수 있도록,
-먼저 피부질환 진단용 데이터 산출물과 진단 API 계약을 고정한다.
+## 진행 순서
+1. 04-A 데이터/학습셋 준비
+2. 04-B 베이스라인 모델
+3. 04-C Qwen3-VL + LoRA
+4. 04-D 로컬 추론 검증
+5. 이후 FastAPI 연결 및 05 RAG 진행
 
-이번 04 단계의 목표는 아래와 같다.
+## 04-A 데이터/학습셋 준비
+- 실제 Derma_AI 이미지 구조 기준으로 클래스/뷰를 확정한다.
+- `주사`는 이미지 분류 클래스에 포함한다.
+- `image_manifest.csv`, `disease_ontology.csv`, `label_mapping.csv`, `vlm_train_dataset.jsonl`, `rag_corpus_derma.jsonl`를 생성한다.
+- 학습 포맷은 baseline 분류기용과 Qwen3-VL instruction tuning용을 모두 준비한다.
 
-- VLM 학습용 데이터 산출물 구조 확정
-- 피부질환 ontology / label mapping 구조 확정
-- 이미지 1장 입력 -> 구조화 JSON 출력 경로 확보
-- 실제 모델 없이도 placeholder 진단 API가 동작하도록 구현
-- 후속 Qwen 계열 VLM / LoRA adapter, RAG, 챗봇이 붙을 수 있는 계약 고정
+## 04-B 베이스라인 모델
+- `torchvision resnet18` 기준 baseline classifier를 실제로 학습한다.
+- train/val/test split 기준으로 최소 1회 학습을 수행한다.
+- 샘플 수를 제한한 경량 실행부터 시작해, 이후 점진적으로 확대한다.
 
-## 2. 선행 조건
+## 04-C Qwen3-VL + LoRA
+- `Qwen/Qwen3-VL-4B-Instruct`를 기준 모델로 사용한다.
+- `peft` 기반 LoRA adapter를 연결한다.
+- tiny-step이라도 실제 train step을 실행해 로딩/학습 경로를 검증한다.
+- structured JSON 출력용 instruction 포맷을 유지한다.
 
-- 03 단계의 데이터 정의 및 ontology 원칙 정리 완료
-- canonical label 방향 확정 완료
-- RAG 본문은 `label_data` 우선 사용 정책 확정 완료
+## 04-D 로컬 추론 검증
+- baseline 샘플 추론을 수행한다.
+- 이후 `주사`, `지루`, `여드름`, `아토피` 중심으로 다건 추론을 확대해 혼동 패턴을 확인한다.
 
-## 3. 범위
+## 현재까지 수행 결과
+- 04-A: 완료 수준
+- 04-B: 실제 학습 1회 실행 확인
+- 04-C: Qwen3-VL-4B tiny-step LoRA 학습 실행 확인
+- 04-D: baseline 샘플 추론 1회 확인
 
-### In Scope
+## 현재 산출물
+- `data/processed/image_manifest.csv` (10800 rows)
+- `data/processed/vlm_train_dataset.jsonl` (10800 rows)
+- `data/processed/baseline_train_metrics.json`
+- `data/processed/baseline_sample_inference.json`
+- `data/processed/qwen_lora_train_metrics.json`
 
-- `image_manifest.csv` 생성 구조
-- `disease_ontology.csv` 생성 구조
-- `label_mapping.csv` 생성 구조
-- `vlm_train_dataset.jsonl` 생성 구조
-- `rag_corpus_derma.jsonl` placeholder 생성 구조
-- FastAPI 최소 앱
-- `/health`
-- `/diagnosis/infer`
-- strict JSON response schema
-- placeholder VLM service 구조
-
-### Out of Scope for Now
-
-- 실제 Qwen 계열 모델 로딩
-- 실제 LoRA adapter 결합
-- RAG 결합
-- 일반 상담 챗봇 고도화
-- Vision fallback 비교 실험
-- HITL 운영 화면
-- React UI 구현
-
-## 4. 핵심 산출물
-
-- `scripts/build_image_manifest.py`
-- `scripts/build_disease_ontology.py`
-- `scripts/build_label_mapping.py`
-- `scripts/build_vlm_train_dataset.py`
-- `scripts/build_rag_corpus_derma.py`
-- `data/processed/*` 산출물
-- FastAPI inference entrypoint
-- diagnosis JSON schema
-- 최소 smoke test 결과
-
-## 5. 권장 출력 형식
-
-```json
-{
-  "predicted_disease": "acne",
-  "confidence": 0.81,
-  "differentials": ["comedonal_acne", "inflammatory_papule"],
-  "needs_human_review": true,
-  "summary": "Placeholder response generated without loading an actual VLM model."
-}
-```
-
-## 6. 완료 기준
-
-- `python scripts/build_image_manifest.py` 실행 가능
-- `python scripts/build_disease_ontology.py` 실행 가능
-- `python scripts/build_label_mapping.py` 실행 가능
-- `python scripts/build_vlm_train_dataset.py` 실행 가능
-- `python scripts/build_rag_corpus_derma.py` 실행 가능
-- 각 스크립트는 `data/processed/` 아래 정해진 포맷 파일 생성
-- `uvicorn apps.api.main:app --reload` 실행 가능
-- `GET /health` 정상 응답
-- `POST /diagnosis/infer` 정상 응답
-- 실제 모델 없이도 placeholder JSON 반환
-- 원본 이미지, 원본 라벨, 체크포인트, `.env`, `config.local.yaml` Git 제외 확인
-
-## 7. 진행 중 수정사항 기록
-
-- 기존 04 문서는 `Qwen3-VL + LoRA 최소 추론` 중심으로 작성되어 있었음
-- 현재 실제 1차 구현 범위는 `데이터 산출물 + placeholder 진단 API` 중심으로 재정렬되었음
-- 따라서 이번 04 문서는 현행 완료 기준에 맞게 갱신함
+## 완료 기준
+- baseline 실제 학습 실행
+- Qwen3-VL + LoRA tiny-step 학습 실행
+- 샘플 추론 실행
+- 결과를 docs/dev 상태 문서에 반영
+- 로컬 산출물은 보존하되, 체크포인트와 대용량 산출물은 Git에 포함하지 않는다.

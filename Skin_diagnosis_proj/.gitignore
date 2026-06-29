@@ -1,4 +1,4 @@
-# Local secrets and config
+﻿# Local secrets and config
 .env
 .env.*
 config.local.yaml
@@ -20,3 +20,7 @@ runs/
 __pycache__/
 *.py[cod]
 doc/not_push/
+data/processed/qwen_lora_adapter_preview/
+data/processed/*_metrics.json
+data/processed/*_inference.json
+
