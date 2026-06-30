@@ -2,7 +2,7 @@
 
 ## 1. 목적
 
-`Skin_diagnosis_proj`를 피부질환 진단 VLM 프로젝트의 독립 작업 공간으로 시작하고, 이후 문서, 코드, 데이터 산출물, 설정 파일을 GitHub 기준으로 안정적으로 관리할 수 있는 최소 기반을 마련한다.
+`Skin_diagnosis_proj`를 피부질환 진단 프로젝트의 독립 작업 공간으로 운영하고, 이후 문서, 코드, 설정, 실험 산출물을 GitHub와 로컬 전용 영역으로 분리해 안정적으로 관리할 수 있는 최소 기반을 마련한다.
 
 이번 00 단계의 목적은 아래와 같다.
 
@@ -11,6 +11,7 @@
 - GitHub 반영 가능한 초기 구조 확보
 - 비밀키, 원본 데이터, 대용량 산출물의 분리 원칙 명시
 - 이후 `01~08` 단계 작업지시서를 누적 수정할 수 있는 기준점 확보
+- `doc/not_push` 로컬 전용 문서/노트북 운영 기준 확정
 
 프로젝트 루트:
 
@@ -24,17 +25,19 @@ D:\vibe_coding\codex\Skin_Project\Skin_diagnosis_proj
 
 - `Skin_diagnosis_proj/doc/pm` 작업지시서
 - `Skin_diagnosis_proj/docs/dev` 상태 문서
-- 이후 추가될 소스코드와 공용 설정 템플릿
+- 소스코드와 공용 설정 템플릿
 - 기술 스펙 문서와 API 문서
+- 재현 가능한 소규모 산출물 예시
 
 ### 2.2 GitHub에 포함하지 않는 것
 
 - 원본 이미지 데이터
 - 원본 라벨 데이터
 - 외부 참고 데이터셋 복사본
-- 생성된 manifest, split, jsonl 대용량 결과물
-- 체크포인트, adapter weight, cache
+- 대용량 manifest/jsonl 중 로컬 실험용 파생 산출물
+- 체크포인트, adapter weight, quantized cache
 - `.env`, `.env.local`, `config.local.yaml`
+- `doc/not_push` 아래 로컬 전용 문서와 노트북
 - 외부 비공개 참고 문서 원문
 
 ### 2.3 외부 환경키 위치
@@ -58,23 +61,23 @@ D:\vibe_coding\codex\Skin_Project\Skin_diagnosis_proj
 
 ```text
 Skin_diagnosis_proj/
+  apps/
+    api/
+    web/
+  config/
+  data/
+    processed/
   doc/
     pm/
-      00_작업지시서_(GitHub_연결_및_형상관리_기반구축).md
-      01_작업지시서_(프로젝트정의_및_범위확정).md
-      02_작업지시서_(시스템아키텍처_및_서비스기반구축).md
-      03_작업지시서_(데이터정의_및_VLM학습기반정리).md
-      04_작업지시서_(Qwen3-VL_LoRA_어댑터_기반구축).md
-      05_작업지시서_(RAG_데이터정제_및_검색기반구축).md
-      06_작업지시서_(최소챗봇_구현_및_VLM_RAG_연결준비).md
-      07_작업지시서_(RAG_비전_HITL_확장구조정의).md
-      08_작업지시서_(React_FastAPI_UI_API_구현범위정의).md
+    not_push/
   docs/
     dev/
-      current_status.md
-      known_issues.md
-      next_actions.md
-      smoke_test_summary.md
+  outputs/
+    logs/
+    qwen_qlora_phase04/
+  prompts/
+  scripts/
+  services/
 ```
 
 ## 4. 브랜치 및 원격 상태
@@ -87,28 +90,29 @@ Skin_diagnosis_proj/
 
 운영 원칙:
 
-- 현재는 `main`에 문서 반영 중
-- 이후 실제 구현 단계부터는 `dev` 또는 feature branch 운영을 권장
+- 현재는 `main`에 문서와 일부 구현 반영 중
+- 이후 장시간 학습/대규모 리팩터링은 `feature branch` 운영을 권장
 
 ## 5. .gitignore 기준
 
-루트 저장소의 `.gitignore`에서 현재 아래 범주가 이미 제외되고 있다.
+현재 프로젝트에서 분리 관리되는 주요 항목은 아래와 같다.
 
 - `.env`, `.env.*`
 - `config.local.yaml`, `*.local.yaml`
-- `outputs`, `checkpoints`, `runs`
+- `doc/not_push/`
+- `outputs/` 하위 장시간 학습 산출물
+- `checkpoints`, `runs`, adapter preview
 - 모델 weight 계열 파일
-- dataset 산출물 폴더
-- `logs`, `.cache`, `cache`
+- 대용량 데이터/캐시 폴더
 
 현재 확인 사항:
 
-- `Skin_diagnosis_proj` 자체에서 별도 산출물은 아직 제한적임
-- 프로젝트 진행에 따라 `outputs`, `data/processed` 등 산출물이 늘어나므로 ignore 정책은 후속 보강 가능
+- `data/processed` 안에는 Git에 포함할 소규모 기준 산출물과, 로컬 전용 학습 로그/metrics가 혼재할 수 있다.
+- ignore 정책은 학습 구조 변화에 따라 계속 보강한다.
 
 ## 6. 상태 문서
 
-현재 생성 완료된 상태 문서:
+현재 운영 중인 상태 문서:
 
 - `docs/dev/current_status.md`
 - `docs/dev/next_actions.md`
@@ -124,6 +128,7 @@ Skin_diagnosis_proj/
 - `docs/dev` 상태 문서 생성
 - Git 커밋 및 GitHub push 기반 확보
 - 외부 환경키 위치 확인
+- 로컬 전용 `doc/not_push` 운영 기준 확보
 
 ## 8. 완료 기준
 
@@ -134,4 +139,5 @@ Skin_diagnosis_proj/
 - `docs/dev` 상태 문서 생성 완료
 - GitHub 커밋 및 push 가능 상태 확인 완료
 - 외부 환경키 위치 및 비밀값 분리 원칙 확인 완료
+- 로컬 전용 문서/노트북 분리 원칙 확인 완료
 - 이후 01 단계부터 작업을 누적할 수 있는 기준점 확보 완료

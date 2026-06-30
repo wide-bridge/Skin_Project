@@ -9,7 +9,7 @@
 - 이미지 데이터 구조와 라벨 구조를 프로젝트 기준으로 고정
 - 질환 ontology를 canonical label 기준으로 정의
 - 이미지 질환명과 Q&A 질환명을 연결하는 매핑 정책 확정
-- VLM 학습/추론에 공통으로 사용할 산출물 형식 확정
+- baseline vision과 VLM 학습/추론에 공통으로 사용할 산출물 형식 확정
 - RAG corpus 생성 기준 확정
 - 텍스트 지식 공백과 클래스 불균형 리스크를 별도 관리 대상으로 명시
 
@@ -26,7 +26,7 @@
 
 ### 3.1 피부질환 이미지 데이터
 
-초기 이미지 질환 축:
+현재 이미지 질환 축:
 
 - 건선
 - 아토피
@@ -34,6 +34,14 @@
 - 정상
 - 주사
 - 지루
+
+현재 실제 산출물 기준:
+
+- `image_manifest.csv` 생성 완료
+- 총 행 수: `10800`
+- split 컬럼: `original_split`, `model_split`
+- 표준 라벨 컬럼: `canonical_label`
+- view 컬럼: `frontal`, `side`
 
 ### 3.2 피부질환 Q&A 데이터
 
@@ -58,26 +66,26 @@
 - `label_data`를 RAG 본문 기준으로 사용
 - `source_data`는 차이 비교와 누락 보완 검토용
 - 질환명 매핑은 코드가 아니라 데이터 파일로 관리
+- baseline vision과 VLM은 같은 manifest와 같은 canonical label 체계를 공유한다.
 
 ## 5. 산출물 기준
 
-- `image_manifest.csv` 또는 `jsonl`
-- `train/val/test split`
+- `image_manifest.csv`
 - `disease_ontology.csv`
 - `label_mapping.csv`
-- `missing_knowledge_report.md`
 - `vlm_train_dataset.jsonl`
 - `rag_corpus_derma.jsonl`
 - `rag_corpus_plastic.jsonl`
+- `missing_knowledge_report.md`
 - `rag_label_source_diff_report.md`
 
 ## 6. 1차 구현과의 연결
 
 이번 단계의 데이터 정의는 아래 1차 구현 라인과 직접 연결된다.
 
-- `04`: VLM 입력/출력 포맷의 기준 데이터
+- `04`: baseline/VLM 입력 데이터와 출력 평가의 기준 데이터
 - `05`: RAG corpus 생성 기준 데이터
-- `06`: 챗봇 응답에 연결되는 diagnosis / context payload의 기준 데이터
+- `06`: API/챗봇 응답에 연결되는 diagnosis/context payload의 기준 데이터
 
 ## 7. 완료 기준
 
@@ -86,6 +94,6 @@
 - 데이터 구조 문서화 완료
 - canonical 질환 ontology 초안 완료
 - 이미지/Q&A 매핑 정책 정의 완료
-- VLM 학습 포맷 초안 완료
+- baseline/VLM 공통 학습 포맷 초안 완료
 - RAG용 `label_data` 우선 사용 원칙 기록 완료
 - 04~06 구현에 필요한 데이터 기준 정의 완료

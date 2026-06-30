@@ -1,6 +1,6 @@
 ﻿# Smoke Test Summary
 
-기준일: 2026-06-29
+기준일: 2026-06-30
 
 ## 04-A 데이터 산출물
 - `python scripts/build_image_manifest.py` 실행 성공
@@ -17,31 +17,26 @@
   - 출력: `data/processed/rag_corpus_derma.jsonl`
 
 ## 04-B baseline 학습
-- `python scripts/train_baseline_classifier.py` 실행 성공
-- 요약 결과:
-  - device: `cuda`
-  - train_samples: `96`
-  - val_samples: `24`
-  - test_samples: `240`
-  - last_train_loss: `1.764684796333313`
-  - val_accuracy: `0.16666666666666666`
+- backbone: `EfficientNet-B0`
+- 최고 검증 정확도 확인:
+  - `epoch 7 / val_accuracy 0.9125`
+- 샘플 추론 결과 예시:
+  - `ground_truth: psoriasis`
+  - `predicted_disease: psoriasis`
+  - `confidence: 0.9730455279350281`
 
-## 04-C Qwen3-VL + LoRA
-- `python scripts/train_qwen_vlm_lora.py` 실행 성공
-- 요약 결과:
-  - model_id: `Qwen/Qwen3-VL-4B-Instruct`
-  - train_rows_used: `2`
-  - train_steps: `1`
-  - last_train_loss: `2.9925694465637207`
-  - adapter_trainable_params: `2949120`
+## 04-C Qwen3-VL LoRA / QLoRA
+- LoRA tiny-step 학습 경로 확인 완료
+- QLoRA 기준 단독 실행 구조 전환 완료
+- 현재 QLoRA status 예시:
+  - `phase: running`
+  - `epoch: 1`
+  - `global_step: 150`
+  - `last_train_loss: 0.05207056179642677`
 
-## 04-D 샘플 추론
-- `python scripts/run_sample_inference_baseline.py` 실행 성공
-- 결과:
-  - ground_truth: `psoriasis`
-  - predicted_disease: `psoriasis`
-  - confidence: `0.8898764252662659`
-  - needs_human_review: `false`
+## 04-D 추론 검증
+- baseline 샘플 추론 실행 성공
+- Qwen 계열은 학습 안정화 후 생성 결과 검증 예정
 
 ## FastAPI placeholder
 - 기존 `/health`, `/diagnosis/infer` placeholder 구조는 유지 중
