@@ -1,0 +1,25 @@
+{
+  "psoriasis": [
+    "\uac74\uc120"
+  ],
+  "atopic_dermatitis": [
+    "\uc544\ud1a0\ud53c\uc131 \ud53c\ubd80\uc5fc",
+    "\uc544\ud1a0\ud53c",
+    "\ud0dc\uc5f4"
+  ],
+  "acne": [
+    "\uc5ec\ub4dc\ub984",
+    "\ubaa8\ub0ad\uc5fc"
+  ],
+  "normal": [],
+  "rosacea": [
+    "\uc8fc\uc0ac",
+    "\uc548\uba74\ud64d\uc870",
+    "\uc548\uba74 \ud64d\uc870\uc99d",
+    "\uc548\uba74 \ud64d\uc870"
+  ],
+  "seborrheic_dermatitis": [
+    "\uc9c0\ub8e8\uc131 \ud53c\ubd80\uc5fc",
+    "\ube44\ub4ec"
+  ]
+}

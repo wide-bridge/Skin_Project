@@ -1,12 +1,13 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
-import csv
 import hashlib
-import json
 from pathlib import Path
 from typing import Iterable
 
-import yaml
+try:
+    from scripts._utf8 import read_yaml_utf8, write_csv_dicts_utf8_sig, write_jsonl_utf8
+except ModuleNotFoundError:  # pragma: no cover - direct script execution fallback
+    from _utf8 import read_yaml_utf8, write_csv_dicts_utf8_sig, write_jsonl_utf8
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = PROJECT_ROOT / "config" / "config.template.yaml"
@@ -19,6 +20,15 @@ CLASS_MAP = {
     "주사": "rosacea",
     "지루": "seborrheic_dermatitis",
 }
+
+BASELINE_LABELS = [
+    "acne",
+    "atopic_dermatitis",
+    "normal",
+    "psoriasis",
+    "rosacea",
+    "seborrheic_dermatitis",
+]
 
 VIEW_MAP = {
     "정면": "frontal",
@@ -47,12 +57,15 @@ DISPLAY_KO_MAP = {
 
 
 def load_config() -> dict:
-    with CONFIG_PATH.open("r", encoding="utf-8") as fp:
-        return yaml.safe_load(fp)
+    return read_yaml_utf8(CONFIG_PATH)
 
 
 def dataset_root() -> Path:
     return Path(load_config()["datasets"]["derma_ai_root"])
+
+
+def qna_training_root() -> Path:
+    return Path(load_config()["datasets"]["qna_training_root"])
 
 
 def processed_dir() -> Path:
@@ -70,18 +83,12 @@ def ensure_processed_dir() -> None:
 
 def write_csv(path: Path, fieldnames: list[str], rows: Iterable[dict]) -> None:
     ensure_processed_dir()
-    with path.open("w", encoding="utf-8-sig", newline="") as fp:
-        writer = csv.DictWriter(fp, fieldnames=fieldnames)
-        writer.writeheader()
-        for row in rows:
-            writer.writerow(row)
+    write_csv_dicts_utf8_sig(path, fieldnames, rows)
 
 
 def write_jsonl(path: Path, rows: Iterable[dict]) -> None:
     ensure_processed_dir()
-    with path.open("w", encoding="utf-8") as fp:
-        for row in rows:
-            fp.write(json.dumps(row, ensure_ascii=False) + "\n")
+    write_jsonl_utf8(path, rows)
 
 
 def parse_folder_name(name: str) -> tuple[str, str, str]:
@@ -102,3 +109,15 @@ def image_png_path(split_dir: str, label_folder: str, stem: str) -> Path:
     source_prefix = "TS" if split_dir == "train" else "VS"
     return dataset_root() / prefix / "source_data" / f"{source_prefix}_{label_folder}" / f"{stem}.png"
 
+
+def slugify_text(text: str) -> str:
+    cleaned = []
+    for char in text.lower().strip():
+        if char.isalnum():
+            cleaned.append(char)
+        elif char in {" ", "-", "_", "/"}:
+            cleaned.append("_")
+    slug = "".join(cleaned).strip("_")
+    while "__" in slug:
+        slug = slug.replace("__", "_")
+    return slug or "unknown"
