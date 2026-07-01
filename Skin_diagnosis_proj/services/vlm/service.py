@@ -61,12 +61,12 @@ class VLMService:
     def _build_explanation(self, predicted_label: str, confidence: float, contexts: list[dict[str, Any]]) -> str:
         disease_ko = DISPLAY_KO_MAP.get(predicted_label, predicted_label)
         if contexts:
-            summary = str(contexts[0].get("content", "")).strip().replace("\n", " ")
-            summary = summary[:280].strip()
-            return f"Baseline 진단 결과는 {disease_ko} 가능성이 높습니다. 참고 문서 요약: {summary}"
+            top = contexts[0]
+            intention = str(top.get("intention", "") or "일반")
+            return f"{disease_ko} 관련 `{intention}` 문서를 우선 참고해 간단한 안내를 제공합니다."
         return (
-            f"Baseline 진단 결과는 {disease_ko} 가능성이 높습니다. "
-            f"현재 신뢰도는 {confidence:.3f}이며, 직접 연결된 설명 문서를 찾지 못해 일반 안내 수준으로 제공합니다."
+            f"{disease_ko} 가능성이 높습니다. "
+            f"현재 신뢰도는 {confidence:.3f}이며, 연결 문서가 부족해 일반 안내만 제공합니다."
         )
 
     def _build_care_guidance(self, predicted_label: str, needs_human_review: bool) -> list[str]:
@@ -111,7 +111,12 @@ class VLMService:
         confidence = float(topk.values[0].item())
         differentials = [BASELINE_LABELS[idx.item()] for idx in topk.indices[1:]]
         needs_human_review = confidence < self.settings.baseline.human_review_confidence_threshold
-        retrieved_contexts = retrieve_dermatology_contexts(predicted_label, differentials, top_k=self.settings.rag.retrieval_top_k)
+        retrieved_contexts = retrieve_dermatology_contexts(
+            predicted_label,
+            differentials,
+            top_k=self.settings.rag.retrieval_top_k,
+            preferred_intentions=["치료", "예방", "관리"],
+        )
 
         disease_ko = DISPLAY_KO_MAP.get(predicted_label, predicted_label)
         differential_ko = [DISPLAY_KO_MAP.get(label, label) for label in differentials]

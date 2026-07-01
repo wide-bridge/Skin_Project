@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class DiagnosisRequest(BaseModel):
-    image_path: str | None = Field(default=None, description="로컬 이미지 경로")
+    image_path: str | None = Field(default=None, description="?? ??? ??")
     upload_filename: str | None = Field(default=None, description="Reserved field for future upload-based inference")
 
     @model_validator(mode="after")
@@ -33,3 +33,20 @@ class DiagnosisResponse(BaseModel):
     retrieved_contexts: list[DiagnosisRetrievedContext] = Field(default_factory=list)
     explanation: str = Field(default="")
     care_guidance: list[str] = Field(default_factory=list)
+
+
+class ChatRequest(BaseModel):
+    message: str = Field(min_length=1, description="??? ??")
+    image_path: str | None = Field(default=None, description="??? ?? ??? ??")
+    image_name: str | None = Field(default=None, description="??? ??? ??? ???")
+    image_bytes_base64: str | None = Field(default=None, description="??? ??? ??? base64 ??")
+
+
+class ChatResponse(BaseModel):
+    mode: str = Field(default="general_rag")
+    user_message: str = Field(default="")
+    answer: str = Field(default="")
+    related_domain: str = Field(default="dermatology")
+    image_path: str | None = None
+    diagnosis_result: DiagnosisResponse | None = None
+    retrieved_contexts: list[DiagnosisRetrievedContext] = Field(default_factory=list)

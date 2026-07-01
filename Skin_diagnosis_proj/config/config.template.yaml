@@ -49,7 +49,10 @@ rag:
   retrieval_top_k: 3
   derma_corpus_path: data/processed/rag_corpus_derma.jsonl
   plastic_corpus_path: data/processed/rag_corpus_plastic.jsonl
+  general_vector_index_path: data/processed/general_rag_vector_index.json
   alias_mapping_path: config/rag_aliases.json
+  general_chat_top_k: 4
+  general_chat_context_char_limit: 520
   default_guidance_terms:
     - 피부건조증
     - 피부염

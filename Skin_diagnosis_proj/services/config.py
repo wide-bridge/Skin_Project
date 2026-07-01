@@ -63,13 +63,16 @@ class RAGConfig(BaseModel):
     retrieval_top_k: int = 3
     derma_corpus_path: str = "data/processed/rag_corpus_derma.jsonl"
     plastic_corpus_path: str = "data/processed/rag_corpus_plastic.jsonl"
+    general_vector_index_path: str = "data/processed/general_rag_vector_index.json"
     alias_mapping_path: str = "config/rag_aliases.json"
+    general_chat_top_k: int = 4
+    general_chat_context_char_limit: int = 520
     default_guidance_terms: list[str] = [
-        "피부건조증",
-        "피부염",
-        "여드름",
-        "아토피성 피부염",
-        "건선",
+        "?????",
+        "???",
+        "???",
+        "???? ???",
+        "??",
     ]
 
 
