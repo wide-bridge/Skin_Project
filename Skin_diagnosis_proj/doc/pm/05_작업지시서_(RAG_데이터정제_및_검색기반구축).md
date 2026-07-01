@@ -1,18 +1,19 @@
-﻿# 05_작업지시서_(RAG_데이터정제_및_검색기반구축)
+﻿# 05 작업지시서 (RAG 데이터정제 및 검색기반구축)
 
 ## 1. 목적
 
-2차 구현으로 진단 결과 설명과 일반 상담에 활용할 RAG 기반을 구축한다.
+baseline 진단 결과를 설명과 상담으로 확장하기 위한 RAG 기반을 구축한다.
 
 이번 05 단계의 목표는 아래와 같다.
 
-- 피부질환/성형 Q&A corpus 정제
-- `label_data` 우선 RAG corpus 구축 원칙 반영
-- 질환 설명용, 일반 피부상담용, 성형상담용 corpus 분리
-- 후속 챗봇 응답에 연결 가능한 검색 기반 확보
+- baseline이 예측한 질환 후보를 기준으로 관련 문서를 검색할 수 있는 retrieval 구조 확립
+- `label_data` 우선 원칙으로 dermatology / plastic corpus를 실제 데이터로 정제
+- 피부질환 설명용과 성형/미용 상담용 corpus를 분리 유지
+- 06 단계 서비스 응답에 바로 연결할 수 있는 검색 결과 구조 확보
 
 ## 2. 선행 조건
 
+- 04 단계에서 1차 진단 엔진을 baseline(`EfficientNet-B0`)으로 결정 완료
 - 03 단계의 데이터 계층 원칙 확정 완료
 - RAG는 `label_data` 우선 사용 원칙 확정 완료
 
@@ -22,25 +23,36 @@
 
 - dermatology RAG corpus
 - plastic/cosmetic RAG corpus
-- 질환 설명용 retrieval 구조
-- 질환명 mapping 반영
+- baseline 예측 질환 기준 retrieval 구조
+- 질환명 mapping 및 canonical label 반영
+- 단순 필터 + 점수화 기반 초기 retriever
 
 ### Out of Scope for Now
 
-- UI 검색 경험 고도화
-- HITL 리뷰 화면 연결
 - 고급 reranker 실험
+- 벡터 DB 운영 고도화
+- HITL 리뷰 화면 연결
+- 챗봇 대화 메모리 고도화
 
-## 4. 핵심 산출물
+## 4. 핵심 구현 방향
+
+- 입력 이미지 자체를 RAG에 넣지 않고, baseline 추론 결과를 retrieval query로 사용한다.
+- `predicted_disease`, `differentials`, `confidence`를 바탕으로 관련 dermatology 문서를 우선 검색한다.
+- 피부질환 corpus와 plastic corpus는 분리 유지하며, 혼합 검색은 하지 않는다.
+- 첫 단계는 단순 규칙 기반 retrieval로 시작하고, 이후 필요 시 embedding 검색으로 확장한다.
+
+## 5. 핵심 산출물
 
 - `rag_corpus_derma.jsonl`
 - `rag_corpus_plastic.jsonl`
-- `rag_label_source_diff_report.md`
-- 최소 retrieval test 결과
+- `rag_label_source_diff_report.jsonl`
+- baseline 예측 결과를 입력으로 받는 최소 retriever 코드
+- retrieval 샘플 검토 결과
 
-## 5. 완료 기준
+## 6. 완료 기준
 
 - `label_data` 기준 corpus 생성 정책 문서화 완료
 - dermatology / plastic corpus 분리 완료
-- 검색 가능한 최소 RAG 기반 확보
-- 챗봇이 조회 가능한 형태의 문서 구조 확보
+- baseline 예측 질환 후보 기준 최소 retrieval 동작 확인
+- 검색 결과를 06 서비스 응답에 전달할 수 있는 구조 확보
+- 질환별 설명 샘플 검토 가능
