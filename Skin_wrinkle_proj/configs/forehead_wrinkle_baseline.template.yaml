@@ -1,0 +1,76 @@
+﻿project:
+  name: Skin_wrinkle_proj
+  phase: forehead_wrinkle_baseline
+
+paths:
+  image_root: ${SKIN_DATA_IMAGE_ROOT}
+  label_root: ${SKIN_DATA_LABEL_ROOT}
+  external_crop_root: ${SKIN_EXTERNAL_CROP_ROOT}
+  outputs_root: outputs
+  checkpoints_root: checkpoints
+  logs_root: logs
+
+settings:
+  seed: 42
+  scenarios: ["01", "02", "03"]
+  target_key: forehead_wrinkle
+  use_roi_crop: true
+  image_size: 224
+  roi_padding_ratio: 0.03
+  strict_group_key: scenario_subject
+  split_ratio:
+    train: 0.7
+    val: 0.15
+    test: 0.15
+  label_remap:
+    0: 0
+    1: 1
+    2: 2
+    3: 3
+    4: 4
+    5: 4
+    6: 4
+
+training:
+  device: cuda
+  num_workers: 0
+  batch_size: 16
+  max_epochs: 50
+  patience: 8
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  weighted_sampler: true
+  class_balanced_loss: false
+  freeze:
+    strategy: lazy
+    warmup_epochs: 5
+    unfreeze_last_stage_epoch: 10
+    unfreeze_full_epoch: 20
+  augmentation:
+    weak: true
+    resized_crop_scale_min: 0.88
+    resized_crop_scale_max: 1.0
+    resized_crop_ratio_min: 0.94
+    resized_crop_ratio_max: 1.06
+    horizontal_flip_prob: 0.5
+    color_jitter: 0.10
+    brightness: 0.10
+    contrast: 0.10
+    saturation: 0.06
+    hue: 0.02
+    blur_prob: 0.15
+    sharpness_prob: 0.15
+
+experiments:
+  - run_id: FW-01
+    backbone: efficientnet_b0
+    task_type: classification
+    pretrained: true
+  - run_id: FW-02
+    backbone: efficientnet_b0
+    task_type: regression
+    pretrained: true
+  - run_id: FW-03
+    backbone: efficientnet_b0
+    task_type: ordinal
+    pretrained: true

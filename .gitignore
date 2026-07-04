@@ -32,3 +32,9 @@ config.local.yaml
 Thumbs.db
 .vscode/
 .idea/
+
+**/logs/
+**/.cache/
+**/cache/
+skin_crop_data/
+
