@@ -15,7 +15,7 @@
 - 왼쪽 눈가 주름 상태
 
 현재 실제 기준 문서:
-- `D:\vibe_coding\codex\Skin_Project\Skin_wrinkle_proj\doc\pm\current`
+- [Skin_wrinkle_proj/doc/pm/current](../../../Skin_wrinkle_proj/doc/pm/current/)
 
 주의:
 - 이 폴더는 실행 파일, 데이터, 체크포인트, 산출물을 옮기는 위치가 아닙니다.
