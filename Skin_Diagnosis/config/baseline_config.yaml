@@ -1,0 +1,29 @@
+dataset:
+  manifest_path: "D:/vibe_coding/codex/Skin_Project/Skin_Diagnosis/data/processed/lesion_manifest.csv"
+  output_dir: "D:/vibe_coding/codex/Skin_Project/Skin_Diagnosis/data/processed"
+  experiment_name: "frontal_only_v2s_7stage"
+
+model:
+  backbone: "efficientnet_v2_s"
+  num_classes: 6
+  image_size: 384
+  human_review_confidence_threshold: 0.80
+
+training:
+  batch_size: 8
+  epochs: 50
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  num_workers: 0
+  patience: 8
+  stage_epochs: [3, 4, 5, 6, 8, 10, 14]
+  stage_unfreeze_ratios: [0.0, 0.10, 0.20, 0.35, 0.50, 0.70, 1.0]
+  stage_learning_rates: [0.0003, 0.00025, 0.0002, 0.00015, 0.0001, 0.00007, 0.00005]
+
+labels:
+  - "acne"
+  - "atopic_dermatitis"
+  - "normal"
+  - "psoriasis"
+  - "rosacea"
+  - "seborrheic_dermatitis"
