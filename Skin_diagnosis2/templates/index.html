@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>피부상담 챗봇</title>
+  <link rel="stylesheet" href="/static/css/style.css?v=20260804-9" />
+</head>
+<body>
+  <main class="shell">
+    <section class="chat-card">
+      <header class="header">
+        <div>
+          <h1>피부 상담 챗봇</h1>
+          <p>피부질환·병변 진단보조부터 피부관리와 메이크업 상담까지 도와드려요.</p>
+        </div>
+      </header>
+
+      <div class="chips">
+        <button data-prompt="피부 사진을 분석하고 피부관리 방법을 알려주세요.">피부 사진 분석</button>
+        <button data-prompt="증상이 반복되는데 병원에 가야 할까요?">증상 상담</button>
+        <button data-prompt="분석 결과를 바탕으로 피부관리 방법을 알려주세요.">결과 기반 상담 연결</button>
+      </div>
+
+      <section id="messages" class="messages"></section>
+
+      <form id="chatForm" class="composer">
+        <label class="attach" title="사진 첨부">
+          +
+          <input id="imageInput" type="file" name="image" accept="image/*" hidden />
+        </label>
+        <div class="input-wrap">
+          <input id="messageInput" name="message" placeholder="피부질환 증상이나 메이크업 고민을 입력해 주세요" autocomplete="off" />
+          <small id="fileLabel">사진 첨부 가능</small>
+        </div>
+        <button class="send" type="submit">보내기</button>
+      </form>
+    </section>
+  </main>
+  <script src="/static/js/app.js?v=20260804-9"></script>
+</body>
+</html>
